@@ -2,6 +2,7 @@ package com.yearup;
 
 import java.util.Scanner;
 
+
 public class Main {
     public static void main(String[] args) {
         Book[] inventory = {
@@ -34,58 +35,143 @@ public class Main {
         int choice = 1; // options for user to sort through. This allows the user to enter numbers and letters
 
         while (choice != 0) {
-            System.out.println("Welcome!");
+            System.out.println("\n=== Welcome! ===");
             System.out.println("What would you like to do?");
             System.out.println("1. View books");
             System.out.println("2. Select a book");
+            System.out.println("3. Return a book");
             System.out.println("0. Exit");
             System.out.println("Choose: ");
 
-            if (read.hasNextInt()) { // this is confirming if the input is within the scope.
-                choice = read.nextInt(); // this one will read the users input
+            if (read.hasNextInt()) { // this is confirming if the input is an integer and within scope.
+                choice = read.nextInt();// this one will read the users input
+                read.nextLine();
             } else {
                 System.out.println("Please enter a valid option");
                 read.nextLine(); // it's gobbling up the wrong answer here
+                System.out.println("===========================");
                 continue; // lets us continue on with the switch case
             }
 
             switch (choice) {
                 case 1:
-                    System.out.println("Available books");
-                    //showing the available books
-                    for (int count = 0; count < inventory.length; count++) {
-                        System.out.println((count + 1) + ". " + inventory[count]);
-                    }
+                    AvailableNow(inventory); // Checking all currently available books through the availablenow method.
                     break;
 
                 case 2:
                     System.out.println("Enter the book number:");
+
+                    if (!read.hasNextInt()) {
+                        System.out.println("Please enter a valid number.");
+                        read.nextLine(); // eat me
+                        break;
+                    }
+
                     int bookNumber = read.nextInt();
 
-                    if (bookNumber >= 1 && bookNumber <= inventory.length) {
-                        System.out.println("Selected: " + inventory[bookNumber - 1]);
-                    } else {
-                        System.out.println("Invalid option.");
+                    read.nextLine(); // this line is being gobbled up.
+
+                    if (bookNumber < 1 || bookNumber > inventory.length) {
+                        System.out.println("Please enter a valid book number.");
+                        break;
                     }
+
+//                    This is to check if the user input is within the catalog
+
+                    Book selectedBook = inventory[bookNumber - 1]; // gets the book object in the index - 1 and setting it to a new variable..
+
+                    if (!selectedBook.isCheckedOut()) {
+                        System.out.println("Enter your name: ");
+                        String name = read.nextLine();
+
+                        selectedBook.checkOut(name);
+
+                        System.out.println("This book is now being borrowed by " + name);
+
+                        //System.out.println("Checked out? " + selectedBook.isCheckedOut());
+                    } else {
+                        System.out.println("This book is being borrowed by " + selectedBook.getCheckedOutTo());
+                    }
+
                     break;
+
+                case 3: // returning a book
+                    System.out.println("What is the book number you are returning?");
+                    if (!read.hasNextInt()) { // checking to see if this number is acceptable for input
+                        System.out.println("Please enter a valid book number.");
+                        read.nextLine(); // eating line again
+                        break;
+                    }
+
+                    int returnBookNumber = read.nextInt(); // the book number that will be returned
+                    read.nextLine(); // eat me
+
+                    if (returnBookNumber < 1 || returnBookNumber > inventory.length) {
+                        System.out.println("This book number is invalid.");
+                        break;
+
+                        }
+
+                        Book returnBook = inventory[returnBookNumber - 1]; // selecting the book to return within the array
+
+                        System.out.println("You are returning " + returnBook.getTitle());
+
+                        if (returnBook.isCheckedOut()) { // this will check if isCheckedOut is true for the book.
+                            String borrower = returnBook.getCheckedOutTo();
+
+                            returnBook.checkIn(borrower); // executing the checkIn method.
+                            System.out.println("Book returned!");
+                        } else {
+                            System.out.println("This book is already in our system.");
+                    }
+                        break;
+
                 case 0:
                     System.out.println("Exiting library now...");
                     break;
 
                 default:
-                    System.out.println("This choice is invalid!");
+                    System.out.println("This choice is invalid!"); // this will run if the input is not valid.
             }
 
         }
         System.out.println("Have a nice day!");
         read.close();
 
-       // public void whatsAvailableNow (Book[],inventory.length, Scanner read){
 
-        //}
 
+
+    } // this marks the end of the main branch.
+
+    // This
+    public static void AvailableNow(Book[] inventory) {
+
+        System.out.println("Available books");
+        for (Book book : inventory) {
+            if (!book.isCheckedOut()) {
+                System.out.println("ID: " + book.getId() +
+                        "\n Title: " + book.getTitle() +
+                        "\n ISBN: " + book.getIsbn());
+            }
+
+
+        }
+    }
+    public static void AlreadyCheckedOut(Book[] inventory) {
+        for (Book book : inventory) {
+            if (book.isCheckedOut()) {
+                System.out.println("ID: " + book.getId() +
+                        "\n Title: " + book.getTitle() +
+                        "\n ISBN: " + book.getIsbn());
+            }
+        }
 
     }
+
+
+
 }
+
+
 
 
