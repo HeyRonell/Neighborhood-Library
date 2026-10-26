@@ -40,6 +40,7 @@ public class Main {
             System.out.println("1. View books");
             System.out.println("2. Select a book");
             System.out.println("3. Return a book");
+            System.out.println("4. See what is checked out.");
             System.out.println("0. Exit");
             System.out.println("Choose: ");
 
@@ -126,6 +127,10 @@ public class Main {
                     }
                         break;
 
+                case 4:
+                    AlreadyCheckedOut(inventory);
+                    break;
+
                 case 0:
                     System.out.println("Exiting library now...");
                     break;
@@ -158,12 +163,19 @@ public class Main {
         }
     }
     public static void AlreadyCheckedOut(Book[] inventory) {
+
+        boolean foundCheckedOutBook = false; // identifying if there are any books checked out
         for (Book book : inventory) {
             if (book.isCheckedOut()) {
-                System.out.println("ID: " + book.getId() +
-                        "\n Title: " + book.getTitle() +
-                        "\n ISBN: " + book.getIsbn());
+
+                System.out.println(book.getTitle() + " is checked out to " + book.getCheckedOutTo());
+
+                foundCheckedOutBook = true;
+
             }
+
+
+
         }
 
     }

@@ -73,8 +73,8 @@ public class Book {
     }
 
     public void checkIn(String name) {
-        setCheckedOutTo("");
-        setCheckedOut(false);
+        setCheckedOutTo(""); // This will reset the name to nothing
+        setCheckedOut(false); // and change the status of this book to false.
 
     }
 
